@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.104.2">
+    <title>Agregar alumnos</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/">
+
+    
+
+    
+
+<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../assets/dist/css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+    
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Inicio</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <!-- <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Buscar" aria-label="Search"> -->
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="login.html">Salir</a>
+    </div>
+  </div>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3 sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="dashboard.html">
+              <span data-feather="home" class="align-text-bottom"></span>
+              Principal
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">
+              <span data-feather="file" class="align-text-bottom"></span>
+              Alumnos
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="shopping-cart" class="align-text-bottom"></span>
+              Cursos
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="users" class="align-text-bottom"></span>
+              Usuarios
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+              Reportes
+            </a>
+          </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+          <span>Guardar reporte</span>
+          <a class="link-secondary" href="#" aria-label="Add a new report">
+            <span data-feather="plus-circle" class="align-text-bottom"></span>
+          </a>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Current month
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Last quarter
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Social engagement
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Year-end sale
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <!-- <h1 class="h2">Dashboard</h1> -->
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Agregar</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Exportar</button>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+            <span class="align-text-bottom"></span>
+            Filtrar
+          </button>
+        </div>
+      </div>
+
+      <h2>Agregar alumnos</h2>
+      <div class="row">
+        <!-- <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="Ingrese su nombre" aria-label="Nombre">
+        </div> -->
+        <div class="col-sm-4">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" value="" required>
+            <div class="invalid-feedback">
+              Nombre no valido.
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="apellido" placeholder="Ingrese su apellido" value="" required>
+            <div class="invalid-feedback">
+              Apellido no valido.
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <label for="dni" class="form-label">DNI</label>
+            <input type="text" class="form-control" id="dni" placeholder="Ingrese su DNI" value="" required>
+            <div class="invalid-feedback">
+              DNI no valido.
+            </div>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-4">
+        <label for="estado_civil" class="form-label">Estado civil</label>
+          <select class="form-select" aria-label="Default select example">
+            <option selected>Seleccionar...</option>
+            <option value="1">Soltero</option>
+            <option value="2">Casado</option>
+            <option value="3">Divorciado</option>
+          </select>
+        </div>
+        <div class="col-sm-4">
+            <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
+            <input type="text" class="form-control" id="dni" placeholder="Ingrese su fecha de nacimiento" value="" required>
+            <div class="invalid-feedback">
+              DNI no valido.
+            </div>
+          </div>
+        <div class="col-md-4">
+            <label for="sexo" class="form-label">Sexo</label>
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Seleccionar...</option>
+                <option value="1">Masculino</option>
+                <option value="1">Femenino</option>
+            </select>
+        </div>
+      </div>
+      <br>
+      <h4>Domicilio</h4>
+      <div class="row">
+        <div class="col-md-6">
+            <label for="provincia" class="form-label">Provincia</label>
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Seleccionar...</option>
+                <option value="1">Buenos Aires</option>
+                <option value="2">Catamarca</option>
+                <option value="3">Chaco</option>
+                <option value="4">Chubut</option>
+                <option value="5">Cordoba</option>
+                <option value="6">Corrientes</option>
+                <option value="7">Entre Rios</option>
+                <option value="8">Formosa</option>
+                <option value="9">Jujuy</option>
+                <option value="10">La Pampa</option>
+                <option value="11">La Rioja</option>
+                <option value="12">Mendoza</option>
+                <option value="13">Misiones</option>
+                <option value="14">Neuquen</option>
+                <option value="15">Rio Negro</option>
+                <option value="16">Salta</option>
+                <option value="17">San Juan</option>
+                <option value="18">San Luis</option>
+                <option value="19">Santa Cruz</option>
+                <option value="20">Santiago del Estero</option>
+                <option value="21">Tierra del Fuego</option>
+                <option value="22">Tucuman</option>
+              </select>
+        </div>
+        <div class="col-md-6">
+            <label for="sexo" class="form-label">Ciudad</label>
+          <input type="text" class="form-control" placeholder="Ingrese su ciudad" aria-label="Ciudad">
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-4">
+            <label for="calle" class="form-label">Calle</label>
+          <input type="text" class="form-control" placeholder="Ingrese calle" aria-label="Calle">
+        </div>
+        <div class="col-md-4">
+            <label for="numero" class="form-label">Numero</label>
+            <input type="text" class="form-control" placeholder="Ingrese numero" aria-label="Numero">
+          </div>
+        <div class="col-md-4">
+            <label for="CP" class="form-label">C.P.</label>
+          <input type="text" class="form-control" placeholder="Ingrese codigo postal" aria-label="CP">
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="../assets/dist/js/dashboard.js"></script>
+  </body>
+</html>
