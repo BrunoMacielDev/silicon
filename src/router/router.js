@@ -27,9 +27,10 @@ Indice Rutas:
       - 3.3 PUT
       - 3.4 DELETE
 
-  - 4. Login y Singin
+  - 4. Login, Singin y Reset Password
       - 4.1 Login
       - 4.2 Singin (POST USUARIOS)
+      - 4.3 Reset Password
 */
 
 // requires //
@@ -56,7 +57,7 @@ router.get("/alumnos", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        message:"Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -69,7 +70,7 @@ router.get("/alumnos", tokenVerifier, (req, res) => {
         } else {
           res.json({
             status: false,
-            message:"Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -104,8 +105,8 @@ router.get("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
             if (!err) {
               if (rows.length != 0) {
                 res.json({
-                  status:true,
-                  datos:rows,
+                  status: true,
+                  datos: rows,
                 });
               } else {
                 res.json({
@@ -113,10 +114,10 @@ router.get("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
                   message: "ID not found",
                 });
               }
-            }else{
+            } else {
               res.json({
                 status: false,
-                message:"Server error",
+                message: "Server error",
               });
               console.log(err);
             }
@@ -162,42 +163,43 @@ router.post("/alumnos", tokenVerifier, (req, res) => {
 ////// 1.2.2 //////
 
 router.post("/alumno_curso", (req, res) => {
-  const { id_alumno, id_curso, } = req.body;
-  mysqlConnection.query(`SELECT * FROM alumno_curso WHERE id_alumno=${id_alumno} AND id_curso=${id_curso}`,(err,rows)=>{
-    if(!err){
-      if(rows.length!=0){
+  const { id_alumno, id_curso } = req.body;
+  mysqlConnection.query(
+    `SELECT * FROM alumno_curso WHERE id_alumno=${id_alumno} AND id_curso=${id_curso}`,
+    (err, rows) => {
+      if (!err) {
+        if (rows.length != 0) {
+          res.json({
+            status: false,
+            message: `Row already exists`,
+          });
+        } else {
+          let query = `INSERT INTO alumno_curso(id_alumno,id_curso)VALUES(${id_alumno},${id_curso})`;
+          mysqlConnection.query(query, (err, rows) => {
+            if (!err) {
+              res.json({
+                status: true,
+                message: `The row was inserted correctly`,
+              });
+            } else {
+              res.json({
+                status: false,
+                message: "Server error",
+              });
+              console.log(err);
+            }
+          });
+          console.log(req.body);
+        }
+      } else {
         res.json({
           status: false,
-          message: `Row already exists`,
+          message: "Error 403",
         });
-      }else{
-        let query = `INSERT INTO alumno_curso(id_alumno,id_curso)VALUES(${id_alumno},${id_curso})`;
-        mysqlConnection.query(query, (err, rows) => {
-          if (!err) {
-            res.json({
-              status: true,
-              message: `The row was inserted correctly`,
-            });
-          } else {
-            res.json({
-              status: false,
-              message: "Server error",
-            });
-            console.log(err);
-          }
-        });
-    console.log(req.body);
       }
-    }else{
-      res.json({
-        status: false,
-        message: "Error 403",
-      });
     }
-  })
-      
+  );
 });
-
 
 ////// 1.3 //////
 
@@ -225,12 +227,12 @@ router.put("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
 
       mysqlConnection.query(query, (err, rows) => {
         if (!err) {
-          if (rows.length!=0) {
+          if (rows.length != 0) {
             res.json({
               status: true,
               message: `The ID (${id_alumno}) was successfully edited`,
             });
-          }else{
+          } else {
             res.json({
               status: false,
               message: "ID not found",
@@ -263,12 +265,12 @@ router.delete(`/alumnos/:id_alumno`, tokenVerifier, (req, res) => {
       let query = `DELETE FROM alumnos WHERE id='${id_alumno}'`;
       mysqlConnection.query(query, (err, rows) => {
         if (!err) {
-          if (rows.length!=0) {
+          if (rows.length != 0) {
             res.json({
               status: true,
               message: `The ID (${id_alumno}) was successfully removed`,
             });
-          }else{
+          } else {
             res.json({
               status: false,
               message: "ID not found",
@@ -331,12 +333,12 @@ router.get("/cursos/:id_cursos", tokenVerifier, (req, res) => {
     } else {
       mysqlConnection.query(query, (err, rows) => {
         if (!err) {
-          if (rows.length!=0) {
+          if (rows.length != 0) {
             res.json({
               status: true,
               datos: rows,
             });
-          }else{
+          } else {
             res.json({
               status: false,
               message: "Course not found",
@@ -359,40 +361,39 @@ router.get("/cursos/:id_cursos", tokenVerifier, (req, res) => {
 router.get("/busqueda_cursos", (req, res) => {
   const { nombre } = req.body;
   let query;
-  if(nombre){
-    query=`SELECT concat_ws(' ', a.apellido, a.nombre) alumno, c.nombre curso 
+  if (nombre) {
+    query = `SELECT concat_ws(' ', a.apellido, a.nombre) alumno, c.nombre curso 
       FROM alumnos a 
       inner join alumno_curso ac on ac.id_alumno=a.id
-      inner join curso c on c.id_curso=ac.id_curso  where c.nombre like '%${nombre}%';`
-  }else{
-    query=`SELECT concat_ws(' ', a.apellido, a.nombre) alumno, c.nombre curso 
+      inner join curso c on c.id_curso=ac.id_curso  where c.nombre like '%${nombre}%';`;
+  } else {
+    query = `SELECT concat_ws(' ', a.apellido, a.nombre) alumno, c.nombre curso 
     FROM alumnos a 
     inner join alumno_curso ac on ac.id_alumno=a.id
-    inner join curso c on c.id_curso=ac.id_curso;`
+    inner join curso c on c.id_curso=ac.id_curso;`;
   }
   mysqlConnection.query(query, (err, rows) => {
-        if (!err) {
-          if (rows.length!=0) {
-            res.json({
-              status: true,
-              datos: rows,
-            });
-          }else{
-            res.json({
-              status: false,
-              message: "Not found",
-            });
-          }
-        } else {
-          res.json({
-            status: false,
-            message: "Server error",
-          });
-          console.log(err);
-        }
+    if (!err) {
+      if (rows.length != 0) {
+        res.json({
+          status: true,
+          datos: rows,
+        });
+      } else {
+        res.json({
+          status: false,
+          message: "Not found",
+        });
+      }
+    } else {
+      res.json({
+        status: false,
+        message: "Server error",
       });
+      console.log(err);
     }
-  );
+  });
+});
 
 ////// 2.2 //////
 
@@ -443,12 +444,12 @@ router.put("/cursos/:id_cursos", tokenVerifier, (req, res) => {
 
       mysqlConnection.query(query, (err, rows) => {
         if (!err) {
-          if (rows.length!=0) {
+          if (rows.length != 0) {
             res.json({
               status: true,
               message: "The ID was successfully edited",
             });
-          }else{
+          } else {
             res.json({
               status: false,
               message: "ID not found",
@@ -481,12 +482,12 @@ router.delete(`/cursos/:id_cursos`, tokenVerifier, (req, res) => {
       let query = `DELETE FROM curso WHERE id_curso='${id_cursos}'`;
       mysqlConnection.query(query, (err, rows) => {
         if (!err) {
-          if (rows.length!=0) {
+          if (rows.length != 0) {
             res.json({
               status: true,
               message: "The ID was successfully removed",
             });
-          }else{
+          } else {
             res.json({
               status: false,
               message: "ID not found",
@@ -549,12 +550,12 @@ router.get(`/usuarios/:id_usuarios`, tokenVerifier, (req, res) => {
     } else {
       mysqlConnection.query(query, (err, rows) => {
         if (!err) {
-          if (rows.length!=0) {
+          if (rows.length != 0) {
             res.json({
               status: true,
               datos: rows,
             });
-          }else{
+          } else {
             res.json({
               status: false,
               message: "ID not found",
@@ -592,7 +593,9 @@ router.put("/usuarios/:id_usuarios", tokenVerifier, (req, res) => {
             status: true,
             message: "The ID was successfully edited",
           });
-          console.log(`ID edited:${id_usuarios}; username change to '${new_username}'`)
+          console.log(
+            `ID edited:${id_usuarios}; username change to '${new_username}'`
+          );
         } else {
           res.json({
             status: false,
@@ -696,7 +699,7 @@ router.post("/login", (req, res) => {
 router.post("/signin", (req, res) => {
   const { username, password, email, apellido_nombre, estado, fecha_creacion } =
     req.body;
-    
+
   var hash = bcrypt.hashSync(password, 10);
   let query = `INSERT INTO usuarios(username, password, email, apellido_nombre, estado, fecha_creacion)VALUES('${username}','${hash}','${email}','${apellido_nombre}','A',NOW())`;
   mysqlConnection.query(query, (err, rows) => {
@@ -704,6 +707,29 @@ router.post("/signin", (req, res) => {
       res.json({
         status: true,
         message: "The values was inserted correctly",
+      });
+    } else {
+      res.json({
+        status: false,
+        message: "Server error",
+      });
+      console.log(err);
+    }
+  });
+});
+
+////// 4.3 //////
+
+router.put("/resetpassword/:id", (req, res) => {
+  const { id } = req.params;
+  let password = req.body;
+  var hash = bcrypt.hashSync(password, 10);
+  let query = `UPDATE usuarios SET password='${hash}' WHERE id = '${id}'`;
+  mysqlConnection.query(query, (err, rows) => {
+    if (!err) {
+      res.json({
+        status: true,
+        message: "The password was changed successfully",
       });
     } else {
       res.json({
