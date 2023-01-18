@@ -6,6 +6,8 @@ Indice Rutas:
         - 1.1.1 GET ALL
         - 1.1.2 GET w/ID
       - 1.2 POST
+        - 1.2.1 NORMAL POST
+        - 1.2.2 POST w/curso (alumno_curso)
       - 1.3 PUT
       - 1.4 DELETE
 
@@ -54,7 +56,7 @@ router.get("/alumnos", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje:"Error 403",
+        message:"Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -67,7 +69,7 @@ router.get("/alumnos", tokenVerifier, (req, res) => {
         } else {
           res.json({
             status: false,
-            mensaje:"Server error",
+            message:"Server error",
           });
           console.log(err);
         }
@@ -85,14 +87,14 @@ router.get("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
   if (isNaN(id_alumno)) {
     res.json({
       status: false,
-      mensaje: "The params need to be a number",
+      message: "The params need to be a number",
     });
   } else {
     jwt.verify(req.token, "siliconKey", (err, valido) => {
       if (err) {
         res.json({
           status: false,
-          mensaje: "Error 403",
+          message: "Error 403",
         });
         res.sendStatus(403);
       } else {
@@ -108,13 +110,13 @@ router.get("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
               } else {
                 res.json({
                   status: false,
-                  mensaje: "ID not found",
+                  message: "ID not found",
                 });
               }
             }else{
               res.json({
                 status: false,
-                mensaje:"Server error",
+                message:"Server error",
               });
               console.log(err);
             }
@@ -125,7 +127,7 @@ router.get("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
   }
 });
 
-////// 1.2 //////
+////// 1.2.1 //////
 
 router.post("/alumnos", tokenVerifier, (req, res) => {
   const { apellido, nombre, dni, sexo, fecha_nacimiento } = req.body;
@@ -133,7 +135,7 @@ router.post("/alumnos", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -142,12 +144,12 @@ router.post("/alumnos", tokenVerifier, (req, res) => {
         if (!err) {
           res.json({
             status: true,
-            mensaje: `The row was inserted correctly`,
+            message: `The row was inserted correctly`,
           });
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -156,6 +158,46 @@ router.post("/alumnos", tokenVerifier, (req, res) => {
   });
   console.log(req.body);
 });
+
+////// 1.2.2 //////
+
+router.post("/alumno_curso", (req, res) => {
+  const { id_alumno, id_curso, } = req.body;
+  mysqlConnection.query(`SELECT * FROM alumno_curso WHERE id_alumno=${id_alumno} AND id_curso=${id_curso}`,(err,rows)=>{
+    if(!err){
+      if(rows.length!=0){
+        res.json({
+          status: false,
+          message: `Row already exists`,
+        });
+      }else{
+        let query = `INSERT INTO alumno_curso(id_alumno,id_curso)VALUES(${id_alumno},${id_curso})`;
+        mysqlConnection.query(query, (err, rows) => {
+          if (!err) {
+            res.json({
+              status: true,
+              message: `The row was inserted correctly`,
+            });
+          } else {
+            res.json({
+              status: false,
+              message: "Server error",
+            });
+            console.log(err);
+          }
+        });
+    console.log(req.body);
+      }
+    }else{
+      res.json({
+        status: false,
+        message: "Error 403",
+      });
+    }
+  })
+      
+});
+
 
 ////// 1.3 //////
 
@@ -175,7 +217,7 @@ router.put("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -186,18 +228,18 @@ router.put("/alumnos/:id_alumno", tokenVerifier, (req, res) => {
           if (rows.length!=0) {
             res.json({
               status: true,
-              mensaje: `The ID (${id_alumno}) was successfully edited`,
+              message: `The ID (${id_alumno}) was successfully edited`,
             });
           }else{
             res.json({
               status: false,
-              mensaje: "ID not found",
+              message: "ID not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -214,7 +256,7 @@ router.delete(`/alumnos/:id_alumno`, tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -224,18 +266,18 @@ router.delete(`/alumnos/:id_alumno`, tokenVerifier, (req, res) => {
           if (rows.length!=0) {
             res.json({
               status: true,
-              mensaje: `The ID (${id_alumno}) was successfully removed`,
+              message: `The ID (${id_alumno}) was successfully removed`,
             });
           }else{
             res.json({
               status: false,
-              mensaje: "ID not found",
+              message: "ID not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -252,7 +294,7 @@ router.get("/cursos", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -265,7 +307,7 @@ router.get("/cursos", tokenVerifier, (req, res) => {
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -283,7 +325,7 @@ router.get("/cursos/:id_cursos", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -297,13 +339,13 @@ router.get("/cursos/:id_cursos", tokenVerifier, (req, res) => {
           }else{
             res.json({
               status: false,
-              mensaje: "Course not found",
+              message: "Course not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -316,7 +358,18 @@ router.get("/cursos/:id_cursos", tokenVerifier, (req, res) => {
 
 router.get("/busqueda_cursos", (req, res) => {
   const { nombre } = req.body;
-  let query = `SELECT * FROM curso WHERE nombre like "%${nombre}%"`
+  let query;
+  if(nombre){
+    query=`SELECT concat_ws(' ', a.apellido, a.nombre) alumno, c.nombre curso 
+      FROM alumnos a 
+      inner join alumno_curso ac on ac.id_alumno=a.id
+      inner join curso c on c.id_curso=ac.id_curso  where c.nombre like '%${nombre}%';`
+  }else{
+    query=`SELECT concat_ws(' ', a.apellido, a.nombre) alumno, c.nombre curso 
+    FROM alumnos a 
+    inner join alumno_curso ac on ac.id_alumno=a.id
+    inner join curso c on c.id_curso=ac.id_curso;`
+  }
   mysqlConnection.query(query, (err, rows) => {
         if (!err) {
           if (rows.length!=0) {
@@ -327,13 +380,13 @@ router.get("/busqueda_cursos", (req, res) => {
           }else{
             res.json({
               status: false,
-              mensaje: "Not found",
+              message: "Not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -350,7 +403,7 @@ router.post("/cursos", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -359,12 +412,12 @@ router.post("/cursos", tokenVerifier, (req, res) => {
         if (!err) {
           res.json({
             status: true,
-            mensaje: `The value('${nombre}') was inserted correctly`,
+            message: `The value('${nombre}') was inserted correctly`,
           });
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -382,7 +435,7 @@ router.put("/cursos/:id_cursos", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -393,18 +446,18 @@ router.put("/cursos/:id_cursos", tokenVerifier, (req, res) => {
           if (rows.length!=0) {
             res.json({
               status: true,
-              mensaje: "The ID was successfully edited",
+              message: "The ID was successfully edited",
             });
           }else{
             res.json({
               status: false,
-              mensaje: "ID not found",
+              message: "ID not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -421,7 +474,7 @@ router.delete(`/cursos/:id_cursos`, tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -431,18 +484,18 @@ router.delete(`/cursos/:id_cursos`, tokenVerifier, (req, res) => {
           if (rows.length!=0) {
             res.json({
               status: true,
-              mensaje: "The ID was successfully removed",
+              message: "The ID was successfully removed",
             });
           }else{
             res.json({
               status: false,
-              mensaje: "ID not found",
+              message: "ID not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -458,7 +511,7 @@ router.get("/usuarios", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -472,7 +525,7 @@ router.get("/usuarios", tokenVerifier, (req, res) => {
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -490,7 +543,7 @@ router.get(`/usuarios/:id_usuarios`, tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -504,13 +557,13 @@ router.get(`/usuarios/:id_usuarios`, tokenVerifier, (req, res) => {
           }else{
             res.json({
               status: false,
-              mensaje: "ID not found",
+              message: "ID not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -528,7 +581,7 @@ router.put("/usuarios/:id_usuarios", tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -537,13 +590,13 @@ router.put("/usuarios/:id_usuarios", tokenVerifier, (req, res) => {
         if (!err) {
           res.json({
             status: true,
-            mensaje: "The ID was successfully edited",
+            message: "The ID was successfully edited",
           });
           console.log(`ID edited:${id_usuarios}; username change to '${new_username}'`)
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -560,7 +613,7 @@ router.delete(`/usuarios/:id_usuarios`, tokenVerifier, (req, res) => {
     if (err) {
       res.json({
         status: false,
-        mensaje: "Error 403",
+        message: "Error 403",
       });
       res.sendStatus(403);
     } else {
@@ -569,12 +622,12 @@ router.delete(`/usuarios/:id_usuarios`, tokenVerifier, (req, res) => {
         if (!err) {
           res.json({
             status: true,
-            mensaje: "The ID was successfully removed",
+            message: "The ID was successfully removed",
           });
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
           console.log(err);
         }
@@ -613,19 +666,19 @@ router.post("/login", (req, res) => {
             } else {
               res.json({
                 status: false,
-                mensaje: "Incorrect password",
+                message: "Incorrect password",
               });
             }
           } else {
             res.json({
               status: false,
-              mensaje: "The user was not found",
+              message: "The user was not found",
             });
           }
         } else {
           res.json({
             status: false,
-            mensaje: "Server error",
+            message: "Server error",
           });
         }
       }
@@ -633,7 +686,7 @@ router.post("/login", (req, res) => {
   } else {
     res.json({
       status: false,
-      mensaje: "Fields are missing",
+      message: "Fields are missing",
     });
   }
 });
@@ -650,12 +703,12 @@ router.post("/signin", (req, res) => {
     if (!err) {
       res.json({
         status: true,
-        mensaje: "The values was inserted correctly",
+        message: "The values was inserted correctly",
       });
     } else {
       res.json({
         status: false,
-        mensaje: "Server error",
+        message: "Server error",
       });
       console.log(err);
     }
